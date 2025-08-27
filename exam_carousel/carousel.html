@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Carousel</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Fixed size for each card */
+    .carousel-item .card {
+      width: 300px;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+      margin: auto;
+    }
+
+    .card {
+        position: relative;
+        width: 300px;
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .carousel-caption-custom {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* centers vertically & horizontally */
+        text-align: center;
+        color: white;
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.7); /* makes text visible over image */
+    }
+
+    /* White overlay on hover */
+    .card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    opacity: 0;          /* hidden by default */
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* let mouse events pass through */
+    z-index: 1;           /* make sure it is above the image but below text */
+    }
+
+    .card:hover::after {
+    opacity: 0.5;         /* 50% white overlay on hover */
+    }
+
+    /* Make sure caption text is above overlay */
+    .carousel-caption-custom {
+    z-index: 2;
+    position: absolute;
+    }
+
+    /* Smaller, less intrusive controls */
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      width: 1.5rem;
+      height: 1.5rem;
+      background-color: #555;   /* fill color for the arrows */
+    }
+    .carousel-control-prev,
+    .carousel-control-next {
+      width: 5%; /* shrink clickable area */
+    }
+
+    /* Make carousel indicators circular */
+    .carousel-indicators [data-bs-target] {
+    width: 12px;           /* size of the dot */
+    height: 12px;
+    border-radius: 50%;    /* make it a circle */
+    background-color: #555; /* inactive color */
+    }
+
+    /* Hide indicators and controls on mobile (≤576px) */
+    @media (max-width: 576px) {
+        .carousel-indicators,
+        .carousel-control-prev,
+        .carousel-control-next {
+            display: none;
+        }
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+  <div id="simpleCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+    <!-- Indicators -->
+    <div class="carousel-indicators"></div>
+
+    <!-- Carousel items -->
+    <div class="carousel-inner"></div>
+
+    <!-- Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#simpleCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#simpleCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Carousel Generator Script -->
+<script>
+    const indicatorsContainer = document.querySelector('.carousel-indicators');
+    const innerContainer = document.querySelector('.carousel-inner');
+
+    // Function to decide items per slide based on screen width
+    function getItemsPerSlide() {
+        const width = window.innerWidth;
+        if (width <= 576) return 1;
+        if (width <= 768) return 2;
+        if (width <= 1200) return 3;
+        return 4;
+    }
+
+    let products = []; // global variable to hold fetched products
+
+    // Fetch data from the API from the dummyjson
+    async function fetchProducts() {
+        try {
+        const response = await fetch('https://dummyjson.com/products');
+        if (!response.ok) throw new Error(response.statusText);
+
+        const data = await response.json();
+        products = data.products; // store products globally
+        generateCarousel(); // call carousel generation after data is loaded
+        } catch (error) {
+        console.error('Error fetching products:', error);
+        }
+    }
+
+    // Generate carousel and inject it to the html
+    function generateCarousel() {
+        if (!products || products.length === 0) return;
+
+        indicatorsContainer.innerHTML = "";
+        innerContainer.innerHTML = "";
+
+        const itemsPerSlide = getItemsPerSlide();
+        const slides = Math.ceil(products.length / itemsPerSlide);
+
+        for (let s = 0; s < slides; s++) {
+        // indicator button
+        const indicator = document.createElement('button');
+        indicator.type = "button";
+        indicator.dataset.bsTarget = "#simpleCarousel";
+        indicator.dataset.bsSlideTo = s;
+        if (s === 0) indicator.classList.add("active");
+        indicatorsContainer.appendChild(indicator);
+
+        // carousel slide
+        const item = document.createElement('div');
+        item.className = "carousel-item";
+        if (s === 0) item.classList.add("active");
+
+        const row = document.createElement('div');
+        row.className = "d-flex justify-content-center gap-2 flex-wrap";
+        
+        // assign data from the API to the the array
+        for (let i = 0; i < itemsPerSlide; i++) {
+            const index = s * itemsPerSlide + i;
+            if (index >= products.length) break;
+
+            // Add each data from the array to the html
+            const product = products[index];
+            const title = product.title;
+            const price = product.price;
+            const imgSrc = product.images[0];
+            const hoverSrc = product.images[1] || product.images[0];
+
+            const col = document.createElement('div');
+            col.innerHTML = `
+            <div class="card" data-hover-src="${hoverSrc}">
+                <img src="${imgSrc}" alt="${title}">
+                <div class="carousel-caption-custom">
+                <div>${title}</div>
+                <div>${price}</div>
+                </div>
+            </div>
+            `;
+            row.appendChild(col);
+        }
+
+        item.appendChild(row);
+        innerContainer.appendChild(item);
+        }
+
+        // Hover image swap
+        document.querySelectorAll('.card').forEach(card => {
+        const img = card.querySelector('img');
+        const originalSrc = img.src;
+        const hoverSrc = card.dataset.hoverSrc;
+
+        card.addEventListener('mouseenter', () => img.src = hoverSrc);
+        card.addEventListener('mouseleave', () => img.src = originalSrc);
+        });
+    }
+
+    // Initialize fetch
+    fetchProducts();
+
+    // Regenerate carousel on resize
+    window.addEventListener('resize', () => {
+        if (products && products.length > 0) {
+        generateCarousel();
+        }
+    });
+    </script>
+</body>
+</html>
