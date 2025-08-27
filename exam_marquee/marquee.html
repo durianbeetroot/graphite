@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Exam Marquee Modular</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .marquee {
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+    .marquee-track {
+      display: flex;
+      flex-shrink: 0;
+      animation: scroll-right linear infinite;
+    }
+    @keyframes scroll-right {
+      from { transform: translateX(-50%); }
+      to   { transform: translateX(0); }
+    }
+    .marquee img {
+      height: 300px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex flex-col gap-12 items-center py-12">
+
+  <!-- Container where marquees will be injected -->
+  <div id="marquees" class="flex flex-col gap-12 w-full max-w-6xl"></div>
+
+  <script>
+    // Function to create a marquee
+    function createMarquee(images, duration) {
+      const section = document.createElement('section');
+      section.className = 'marquee w-full';
+
+      const track = document.createElement('div');
+      track.className = `marquee-track animate-[scroll-right_${duration}s_linear_infinite]`;
+
+      // Add images twice for seamless loop
+      for (let i = 0; i < 2; i++) {
+        images.forEach(src => {
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = src;
+          img.className = 'mx-2';
+          track.appendChild(img);
+        });
+      }
+
+      section.appendChild(track);
+      return section;
+    }
+
+    // Define marquees
+    const marquee1 = createMarquee(['a.png', 'b.png', 'c.png'], 12);
+    const marquee2 = createMarquee(['a.png', 'b.png', 'c.png', 'd.png', 'e.png', 'f.png'], 26);
+
+    // Append to container
+    document.getElementById('marquees').appendChild(marquee1);
+    document.getElementById('marquees').appendChild(marquee2);
+  </script>
+</body>
+</html>
