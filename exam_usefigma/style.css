@@ -4,6 +4,7 @@
 :root { --theme-transition: 180ms ease; }
 * { transition: background-color var(--theme-transition), color var(--theme-transition), border-color var(--theme-transition); }
 
+
 /* -------------------
    LIGHT THEME
    ------------------- */

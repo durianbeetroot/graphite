@@ -23,7 +23,7 @@
   <!-- Desktop sidebar (hidden on small screens) -->
   <aside id="sidebar" class="hidden md:flex transition-all duration-300 flex-col relative w-1/4">
     <div class="flex items-center justify-between p-4 sidebar-top pt-6">
-      <img src="logo.png" alt="logo" class="w-9 sidebar-logo" />
+      <img src="logo.png" alt="logo" class="w-9 switch-logo" />
       <button id="toggleBtn" class="rounded text-center p-1">
         <img src="openclose.png" alt="toggle" class="h-4 w-4" />
       </button>
@@ -37,7 +37,7 @@
     <ul class="space-y-2 p-4 sidebar-menu">
       <li>
         <button id="btnCalculator" class="flex items-center space-x-2 w-full px-2 py-2 rounded-md sidebar-item">
-          <img src="calculator.png" alt="calculator" class="h-4 w-4" />
+          <img src="cal.png" alt="calculator" class="h-4 w-4 switch-cal" />
           <span class="sidebar-text">Calculator</span>
         </button>
       </li>
@@ -46,7 +46,7 @@
     <div class="p-4 mt-auto">
         <button id="btnSettings"
             class="w-full flex items-center justify-start space-x-2 border rounded-md p-2 py-3 sidebar-bottom shadow-md border-none">
-            <img src="calculator.png" alt="settings" class="h-4 w-4" />
+            <img src="person.png" alt="settings" class="h-4 w-4 switch-person" />
             <span class="text-sm sidebar-bottom-text">Settings</span>
         </button>
     </div>
@@ -57,16 +57,15 @@
     <div class="h-full w-full p-4">
       <div class="relative h-full w-full bg-white rounded-lg shadow-xl overflow-hidden flex flex-col">
         <!-- header -->
-        <div class="flex items-center justify-between p-6">
-          <div class="text-sm text-gray-500">Menu</div>
-          <button id="mobileClose" class="p-2 rounded-md">✕</button>
+        <div class="flex items-center justify-end p-6">
+            <button id="mobileClose" class="p-2 rounded-md">✕</button>
         </div>
-
+        
         <!-- scrollable content: calculator item(s) appear here -->
         <div class="mt-4 flex-1 overflow-auto px-6">
           <div class="space-y-2">
-            <button id="mobileBtnCalculator" class="w-full text-left flex items-center gap-3 p-3 rounded">
-              <img src="calculator.png" alt="" class="h-5 w-5" />
+            <button id="mobileBtnCalculator" class="w-full text-left flex items-center gap-3 p-3 rounded switch-cal">
+              <img src="cal.png" alt="" class="h-4 w-4 switch-cal2" />
               <span class="text-sm">Calculator</span>
             </button>
           </div>
@@ -75,7 +74,7 @@
         <!-- footer: settings stuck to the bottom of the panel -->
         <div class="mt-4 border-t pt-4 px-6">
             <button id="mobileBtnSettings" class="w-full text-left flex items-center gap-3 p-3 rounded">
-                <img src="calculator.png" alt="" class="h-5 w-5" />
+                <img src="person.png" alt="" class="h-4 w-4 switch-person2" />
                 <span class="text-sm">Settings</span>
             </button>
         </div>
@@ -91,8 +90,8 @@
              md:mx-0 md:my-0 md:max-w-none md:w-full md:h-full md:p-8 relative overflow-auto">
 
       <!-- mobile hamburger inside panel -->
-      <button id="mobileToggleInside" class="md:hidden absolute right-4 top-4 bg-white p-2 rounded-md shadow-sm">
-        ☰
+      <button id="mobileToggleInside" class="md:hidden absolute right-4 top-4 p-2 rounded-md shadow-sm">
+        <img src="logo.png" alt="logo" class="w-9 switch-logo2" />
       </button>
 
       <!-- calculator view -->
@@ -141,6 +140,11 @@
         <div class="w-full md:w-1/4 flex flex-col h-full">
           <h2 class="text-2xl font-semibold mb-6">Settings</h2>
 
+          <div class="mb-4 flex items-center space-x-2">
+            <img src="app.png" alt="settings" class="h-4 w-4 switch-app" />
+            <label for="theme" class="block text-base text-gray-600">Appearance</label>
+          </div>
+
           <div class="mb-8">
             <label for="theme" class="block text-sm text-gray-600 mb-1">Theme Selection</label>
             <select id="theme" class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
@@ -148,6 +152,11 @@
               <option value="light">Light</option>
               <option value="dark">Dark</option>
             </select>
+          </div>
+
+          <div class="mb-4 flex items-center space-x-2">
+            <img src="user.png" alt="settings" class="h-4 w-4 switch-user" />
+            <label for="theme" class="block text-base text-gray-600">User Info</label>
           </div>
 
           <div class="mb-8">
@@ -270,21 +279,55 @@
     // apply theme function
     function applyTheme(name) {
         const logo = document.querySelector('.switch-logo');
-
+        const logo2 = document.querySelector('.switch-logo2');
+        const app = document.querySelector('.switch-app');
+        const person = document.querySelector('.switch-person');
+        const person2 = document.querySelector('.switch-person2');
+        const cal = document.querySelector('.switch-cal');
+        const cal2 = document.querySelector('.switch-cal2');
+        const setting = document.querySelector('.switch-setting');
+        const user = document.querySelector('.switch-user');
 
         document.body.classList.remove('theme-light', 'theme-dark');
         if (name === 'light') {
             document.body.classList.add('theme-light');
 
             if (logo) logo.src = 'logo.png';
+            if (logo2) logo2.src = 'logo.png';
+            if (app) app.src = 'app.png';
+            if (person) person.src = 'person.png';
+            if (person2) person2.src = 'person.png';
+            if (cal) cal.src = 'cal.png';
+            if (cal2) cal2.src = 'cal.png';
+            if (setting) setting.src = 'setting.png';
+            if (user) user.src = 'user.png';
         } else if (name === 'dark') {
             document.body.classList.add('theme-dark');
 
+            if (logo) logo.src = 'logoDark.png';
+            if (logo2) logo2.src = 'logoDark.png';
+            if (app) app.src = 'appDark.png';
+            if (person) person.src = 'personDark.png';
+            if (person2) person2.src = 'personDark.png';
+            if (cal) cal.src = 'calDark.png';
+            if (cal2) cal2.src = 'calDark.png';
+            if (setting) setting.src = 'settingDark.png';
+            if (user) user.src = 'userDark.png';
         } else {
             // system: remove explicit classes and follow prefers-color-scheme
             const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             document.body.classList.toggle('theme-dark', prefersDark);
             document.body.classList.toggle('theme-light', !prefersDark);
+
+            if (logo) logo.src = prefersDark ? 'logoDark.png' : 'logo.png';
+            if (logo2) logo2.src = 'logoDark.png';
+            if (app) app.src = prefersDark ? 'appDark.png' : 'app.png';
+            if (person) person.src = prefersDark ? 'personDark.png' : 'person.png';
+            if (person2) person2.src = prefersDark ? 'personDark.png' : 'person.png';
+            if (cal) cal.src = prefersDark ? 'calDark.png' : 'cal.png';
+            if (cal2) cal2.src = prefersDark ? 'calDark.png' : 'cal.png';
+            if (setting) setting.src = prefersDark ? 'settingDark.png' : 'setting.png';
+            if (user) user.src = prefersDark ? 'userDark.png' : 'user.png';
         }
     }
 
