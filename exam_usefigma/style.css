@@ -1,0 +1,102 @@
+/* style.css - theme styles (light / dark) */
+
+/* quick transition for nice effect */
+:root { --theme-transition: 180ms ease; }
+* { transition: background-color var(--theme-transition), color var(--theme-transition), border-color var(--theme-transition); }
+
+/* -------------------
+   LIGHT THEME
+   ------------------- */
+body.theme-light {
+  background-color: #f1f3f3 !important; /* dashboard background */
+  color: #1A2120 !important;
+}
+
+/* panel (settings/character square) background */
+body.theme-light #panel {
+  background-color: #fcfcfc !important;
+  color: #1A2120 !important;
+}
+
+/* panel (settings/character square) background */
+body.theme-light #btnSettings {
+  background-color: #fcfcfc !important;
+  color: #1A2120 !important;
+}
+
+/* inputs/selects in light */
+body.theme-light input,
+body.theme-light select,
+body.theme-light textarea {
+  background: #ffffff;
+  border-color: #d1d5db;
+  color: #1A2120;
+}
+
+/* mobile menu panel background */
+body.theme-light #mobileMenu .relative,
+body.theme-light #mobileMenu .relative * {
+  color: #1A2120;
+}
+
+/* -------------------
+   DARK THEME
+   ------------------- */
+body.theme-dark {
+  background-color: #131313 !important; /* dashboard background */
+  color: #FCFCFC !important;
+}
+
+/* panel (settings/character square) background */
+body.theme-dark #panel {
+  background-color: #232323 !important;
+  color: #FCFCFC !important;
+}
+
+/* dark mode for btnSettings */
+body.theme-dark #btnSettings {
+  background-color: #232323 !important;
+  color: #FCFCFC !important;
+}
+
+/* inputs/selects in dark */
+body.theme-dark input,
+body.theme-dark select,
+body.theme-dark textarea {
+  background: #2b2b2b;
+  border-color: #3b3b3b;
+  color: #FCFCFC;
+}
+
+/* mobile menu panel background */
+body.theme-dark #mobileMenu .relative,
+body.theme-dark #mobileMenu .relative * {
+  color: #FCFCFC;
+}
+
+/* Ensure panel text and its children inherit the panel color (override Tailwind where needed) */
+body.theme-light #panel, body.theme-light #panel * { color: #1A2120 !important; }
+body.theme-dark #panel, body.theme-dark #panel * { color: #FCFCFC !important; }
+
+/* small tweaks */
+body.theme-dark input::placeholder { color: #bdbdbd; }
+body.theme-light input::placeholder { color: #9ca3af; }
+
+/* ensure the desktop sidebar text respects theme as well */
+body.theme-light aside, body.theme-light aside * { color: #1A2120 !important; }
+body.theme-dark aside, body.theme-dark aside * { color: #FCFCFC !important; }
+
+/* 🌞 Light Theme */
+body.theme-light #mobileMenu > div > div {
+  background-color: #FCFCFC !important; /* Dashboard background */
+  color: #1A2120 !important;
+}
+
+/* 🌙 Dark Theme */
+body.theme-dark #mobileMenu > div > div {
+  background-color: #131313 !important; /* Dashboard background */
+  color: #FCFCFC !important;
+}
+
+
+/* end of style.css */

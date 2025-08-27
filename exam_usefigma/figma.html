@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Calculator / Settings (responsive)</title>
+
+  <!-- DM Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Your theme CSS -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    html, body { font-family: "DM Sans", sans-serif; }
+  </style>
+</head>
+<body class="h-screen flex">
+
+  <!-- Desktop sidebar (hidden on small screens) -->
+  <aside id="sidebar" class="hidden md:flex transition-all duration-300 flex-col relative w-1/4">
+    <div class="flex items-center justify-between p-4 sidebar-top pt-6">
+      <img src="logo.png" alt="logo" class="w-9 sidebar-logo" />
+      <button id="toggleBtn" class="rounded text-center p-1">
+        <img src="openclose.png" alt="toggle" class="h-4 w-4" />
+      </button>
+    </div>
+
+    <div class="flex items-center px-4 divider">
+      <div class="flex-grow border-t border-solid border-gray-300"></div>
+      <span class="ml-2 text-xs text-gray-500 sidebar-edit">Edit</span>
+    </div>
+
+    <ul class="space-y-2 p-4 sidebar-menu">
+      <li>
+        <button id="btnCalculator" class="flex items-center space-x-2 w-full px-2 py-2 rounded-md sidebar-item">
+          <img src="calculator.png" alt="calculator" class="h-4 w-4" />
+          <span class="sidebar-text">Calculator</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="p-4 mt-auto">
+        <button id="btnSettings"
+            class="w-full flex items-center justify-start space-x-2 border rounded-md p-2 py-3 sidebar-bottom shadow-md border-none">
+            <img src="calculator.png" alt="settings" class="h-4 w-4" />
+            <span class="text-sm sidebar-bottom-text">Settings</span>
+        </button>
+    </div>
+  </aside>
+
+  <!-- MOBILE: full-screen menu overlay (fills viewport with matching padding) -->
+  <div id="mobileMenu" class="hidden fixed inset-0 z-50">
+    <div class="h-full w-full p-4">
+      <div class="relative h-full w-full bg-white rounded-lg shadow-xl overflow-hidden flex flex-col">
+        <!-- header -->
+        <div class="flex items-center justify-between p-6">
+          <div class="text-sm text-gray-500">Menu</div>
+          <button id="mobileClose" class="p-2 rounded-md">✕</button>
+        </div>
+
+        <!-- scrollable content: calculator item(s) appear here -->
+        <div class="mt-4 flex-1 overflow-auto px-6">
+          <div class="space-y-2">
+            <button id="mobileBtnCalculator" class="w-full text-left flex items-center gap-3 p-3 rounded">
+              <img src="calculator.png" alt="" class="h-5 w-5" />
+              <span class="text-sm">Calculator</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- footer: settings stuck to the bottom of the panel -->
+        <div class="mt-4 border-t pt-4 px-6">
+            <button id="mobileBtnSettings" class="w-full text-left flex items-center gap-3 p-3 rounded">
+                <img src="calculator.png" alt="" class="h-5 w-5" />
+                <span class="text-sm">Settings</span>
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content area -->
+  <main class="flex-1 flex items-center justify-center py-4 md:pr-4">
+    <div
+      id="panel"
+      class="mx-4 my-4 w-full h-[calc(100vh-2rem)] bg-white shadow-xl rounded-lg p-6
+             md:mx-0 md:my-0 md:max-w-none md:w-full md:h-full md:p-8 relative overflow-auto">
+
+      <!-- mobile hamburger inside panel -->
+      <button id="mobileToggleInside" class="md:hidden absolute right-4 top-4 bg-white p-2 rounded-md shadow-sm">
+        ☰
+      </button>
+
+      <!-- calculator view -->
+      <div id="calculatorView" class="w-full h-full">
+        <div class="w-full md:w-1/4 flex flex-col">
+          <h2 class="text-2xl font-semibold mb-6">Calculator</h2>
+
+          <label class="text-sm text-gray-600 mb-1">Project Name</label>
+          <input type="text" placeholder="value" class="mb-4 border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+
+          <label class="text-sm text-gray-600 mb-1">Date</label>
+          <input type="date" value="2099-11-01" class="mb-4 border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+
+          <label class="text-sm text-gray-600 mb-1">ASTM Code</label>
+          <select class="mb-4 border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+            <option>option</option>
+          </select>
+
+          <label class="text-sm text-gray-600 mb-1">Pipe Grade</label>
+          <select class="mb-4 border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+            <option>option</option>
+          </select>
+
+          <label class="text-sm text-gray-600 mb-1">Corrosion</label>
+          <div class="relative mb-4">
+            <input type="text" placeholder="value" class="w-full border rounded-md p-2 pr-10 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            <span class="absolute inset-y-0 right-2 flex items-center text-gray-600 text-sm">mm</span>
+          </div>
+
+          <label class="text-sm text-gray-600 mb-1">Weld Type</label>
+          <select class="mb-6 border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+            <option>option</option>
+          </select>
+
+          <button class="mb-4 bg-teal-600 text-white rounded-md py-2 px-4 hover:bg-teal-700 transition w-full md:w-auto">Submit</button>
+
+          <div class="flex flex-col space-y-2 text-sm text-gray-600 pb-4">
+            <button class="flex items-center gap-2"><span>↺</span> Clean all values</button>
+            <button class="flex items-center gap-2"><span>⟲</span> Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- settings view -->
+      <div id="settingsView" class="hidden w-full h-full">
+        <div class="w-full md:w-1/4 flex flex-col h-full">
+          <h2 class="text-2xl font-semibold mb-6">Settings</h2>
+
+          <div class="mb-8">
+            <label for="theme" class="block text-sm text-gray-600 mb-1">Theme Selection</label>
+            <select id="theme" class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+              <option value="system">Follow system theme</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+
+          <div class="mb-8">
+            <div class="mb-4">
+              <label for="firstName" class="block text-sm text-gray-600 mb-1">First Name</label>
+              <input id="firstName" type="text" value="Ray" class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            </div>
+            <div>
+              <label for="lastName" class="block text-sm text-gray-600 mb-1">Last Name</label>
+              <input id="lastName" type="text" value="W." class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            </div>
+          </div>
+
+          <div class="flex flex-col space-y-4 mt-auto items-center">
+            <button id="saveSettingsBtn" class="bg-teal-600 text-white px-4 py-2 rounded-md hover:bg-teal-700 transition w-full">Save changes</button>
+            <button class="flex items-center text-gray-500 text-sm hover:text-gray-700"><span class="mr-1">↪</span> Log out</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // Desktop sidebar collapse logic
+    const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.getElementById("toggleBtn");
+    const sidebarTexts = document.querySelectorAll(".sidebar-text");
+    const sidebarTop = document.querySelector(".sidebar-top");
+    const sidebarLogo = document.querySelector(".sidebar-logo");
+    const sidebarEdit = document.querySelector(".sidebar-edit");
+    const sidebarBottomText = document.querySelector(".sidebar-bottom-text");
+    const sidebarMenu = document.querySelector(".sidebar-menu");
+
+    if (toggleBtn) {
+      let collapsed = false;
+      toggleBtn.addEventListener("click", () => {
+        collapsed = !collapsed;
+        if (collapsed) {
+          sidebar.classList.remove("w-1/4");
+          sidebar.classList.add("w-auto");
+          sidebarTexts.forEach(t => t.classList.add("hidden"));
+          sidebarEdit.classList.add("hidden");
+          sidebarBottomText && sidebarBottomText.classList.add("hidden");
+          sidebarTop.classList.remove("flex", "justify-between");
+          sidebarTop.classList.add("flex-col", "items-center", "space-y-4");
+          sidebarMenu.classList.add("items-center");
+          sidebarMenu.classList.add("flex", "flex-col");
+          sidebarLogo.classList.add("mb-2");
+        } else {
+          sidebar.classList.remove("w-auto");
+          sidebar.classList.add("w-1/4");
+          sidebarTexts.forEach(t => t.classList.remove("hidden"));
+          sidebarEdit.classList.remove("hidden");
+          sidebarBottomText && sidebarBottomText.classList.remove("hidden");
+          sidebarTop.classList.remove("flex-col", "items-center", "space-y-4");
+          sidebarTop.classList.add("flex", "justify-between");
+          sidebarMenu.classList.remove("items-center", "flex", "flex-col");
+          sidebarLogo.classList.remove("mb-2");
+        }
+      });
+    }
+
+    // View toggle logic (desktop buttons)
+    const btnCalculator = document.getElementById("btnCalculator");
+    const btnSettings = document.getElementById("btnSettings");
+    const calculatorView = document.getElementById("calculatorView");
+    const settingsView = document.getElementById("settingsView");
+
+    // show settings by default on desktop
+    calculatorView.classList.add("hidden");
+    settingsView.classList.remove("hidden");
+
+    if (btnCalculator) {
+      btnCalculator.addEventListener("click", () => {
+        calculatorView.classList.remove("hidden");
+        settingsView.classList.add("hidden");
+      });
+    }
+    if (btnSettings) {
+      btnSettings.addEventListener("click", () => {
+        settingsView.classList.remove("hidden");
+        calculatorView.classList.add("hidden");
+      });
+    }
+
+    // MOBILE: menu and mobile buttons
+    const mobileToggleInside = document.getElementById("mobileToggleInside");
+    const mobileMenu = document.getElementById("mobileMenu");
+    const mobileClose = document.getElementById("mobileClose");
+    const mobileBtnCalculator = document.getElementById("mobileBtnCalculator");
+    const mobileBtnSettings = document.getElementById("mobileBtnSettings");
+
+    // open mobile menu when hamburger inside panel clicked
+    mobileToggleInside && mobileToggleInside.addEventListener("click", () => {
+      mobileMenu.classList.remove("hidden");
+    });
+
+    // close mobile menu
+    mobileClose && mobileClose.addEventListener("click", () => {
+      mobileMenu.classList.add("hidden");
+    });
+
+    // When mobile menu item pressed: close mobile menu and show view
+    mobileBtnCalculator && mobileBtnCalculator.addEventListener("click", () => {
+      mobileMenu.classList.add("hidden");
+      calculatorView.classList.remove("hidden");
+      settingsView.classList.add("hidden");
+    });
+    mobileBtnSettings && mobileBtnSettings.addEventListener("click", () => {
+      mobileMenu.classList.add("hidden");
+      settingsView.classList.remove("hidden");
+      calculatorView.classList.add("hidden");
+    });
+
+    // ---------- THEME LOGIC ----------
+    const saveBtn = document.getElementById('saveSettingsBtn');
+    const themeSelect = document.getElementById('theme');
+
+    // apply theme function
+    function applyTheme(name) {
+        const logo = document.querySelector('.switch-logo');
+
+
+        document.body.classList.remove('theme-light', 'theme-dark');
+        if (name === 'light') {
+            document.body.classList.add('theme-light');
+
+            if (logo) logo.src = 'logo.png';
+        } else if (name === 'dark') {
+            document.body.classList.add('theme-dark');
+
+        } else {
+            // system: remove explicit classes and follow prefers-color-scheme
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.body.classList.toggle('theme-dark', prefersDark);
+            document.body.classList.toggle('theme-light', !prefersDark);
+        }
+    }
+
+    // load persisted theme (or default to system)
+    (function loadTheme() {
+      const saved = localStorage.getItem('appTheme'); // 'light' | 'dark' | 'system' | null
+      const initial = saved || 'system';
+      applyTheme(initial);
+      if (themeSelect) themeSelect.value = initial;
+    })();
+
+    // Save button applies theme and persists
+    if (saveBtn && themeSelect) {
+      saveBtn.addEventListener('click', () => {
+        const val = themeSelect.value || 'system';
+        if (val === 'light') {
+          applyTheme('light');
+          localStorage.setItem('appTheme', 'light');
+        } else if (val === 'dark') {
+          applyTheme('dark');
+          localStorage.setItem('appTheme', 'dark');
+        } else {
+          // system
+          applyTheme('system');
+          localStorage.setItem('appTheme', 'system');
+        }
+      });
+    }
+
+    // Also react to system changes when using 'system' option
+    if (window.matchMedia) {
+      const mq = window.matchMedia('(prefers-color-scheme: dark)');
+      mq.addEventListener && mq.addEventListener('change', e => {
+        const saved = localStorage.getItem('appTheme') || 'system';
+        if (saved === 'system') {
+          applyTheme('system');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
