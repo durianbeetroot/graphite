@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Line Graph with Axes</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    #tooltip {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-family: sans-serif;
+      font-size: 14px;
+      pointer-events: none; /* ignore mouse */
+    }
+  </style>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<div id="tooltip">Click a sphere to see ID</div>
+
+<script type="module">
+import * as THREE from 'three'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+
+// Points data
+const points = [
+    { id: 1, x: 95622.37, y: 30699.44, z: 5320.703 },
+    { id: 2, x: 95622.64, y: 30688.74, z: 5291.15 },
+    { id: 3, x: 95749.8,  y: 30223.4,  z: 5232.045 },
+    { id: 4, x: 95660.66, y: 30223.34, z: 5229.145 },
+    { id: 5, x: 95481.76, y: 30222.7,  z: 5224.081 },
+    { id: 6, x: 95480.57, y: 30202.97, z: 5224.066 },
+    { id: 7, x: 95480.67, y: 30202.63, z: 5218.381 },
+    { id: 8, x: 95473.47, y: 30139.93, z: 5129.831 },
+    { id: 9, x: 95484.04, y: 30145.27, z: 5130.356 },
+    { id: 10, x: 96121.15, y: 28920.01, z: 4922.951 },
+    { id: 11, x: 96120.68, y: 28916.4,  z: 4922.511 },
+    { id: 12, x: 96120.44, y: 28912.57, z: 4922.205 },
+    { id: 13, x: 96120.19, y: 28908.58, z: 4922.045 },
+    { id: 14, x: 96119.31, y: 28895.63, z: 4921.655 }
+]
+
+const scale = 0.04
+
+// Compute center
+let center = { x: 0, y: 0, z: 0 }
+points.forEach(p => {
+    center.x += p.x
+    center.y += p.y
+    center.z += p.z
+})
+center.x /= points.length
+center.y /= points.length
+center.z /= points.length
+
+// Scene, camera, renderer
+const scene = new THREE.Scene()
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000)
+camera.position.set(0, 30, 50)
+camera.lookAt(0,0,0)
+
+const renderer = new THREE.WebGLRenderer({ antialias: true })
+renderer.setSize(window.innerWidth, window.innerHeight)
+document.body.appendChild(renderer.domElement)
+
+// OrbitControls
+const controls = new OrbitControls(camera, renderer.domElement)
+controls.target.set(0,0,0)
+controls.update()
+
+// Axes helper
+scene.add(new THREE.AxesHelper(50))
+
+// Line connecting points
+const lineGeometry = new THREE.BufferGeometry().setFromPoints(
+    points.map(p => new THREE.Vector3(
+        (p.x - center.x) * scale,
+        (p.y - center.y) * scale,
+        (p.z - center.z) * scale
+    ))
+)
+scene.add(new THREE.Line(lineGeometry, new THREE.LineBasicMaterial({ color: 0x0000ff })))
+
+const sphereGeom = new THREE.SphereGeometry(0.2, 16, 16)
+const sphereMat = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+const sphereMeshes = []
+
+points.forEach(p => {
+    const s = new THREE.Mesh(sphereGeom, sphereMat)
+    s.position.set(
+        (p.x - center.x) * scale,
+        (p.y - center.y) * scale,
+        (p.z - center.z) * scale
+    )
+    s.userData = { id: p.id }
+    sphereMeshes.push(s)
+    scene.add(s)
+})
+
+// Tooltip div
+const tooltip = document.getElementById('tooltip')
+
+// Raycaster for click detection
+const raycaster = new THREE.Raycaster()
+const mouse = new THREE.Vector2()
+
+function onClick(event) {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1
+
+    raycaster.setFromCamera(mouse, camera)
+    const intersects = raycaster.intersectObjects(sphereMeshes)
+
+    if (intersects.length > 0) {
+        const clickedSphere = intersects[0].object
+        tooltip.textContent = `Sphere ID: ${clickedSphere.userData.id}`
+    }
+}
+
+window.addEventListener('click', onClick)
+
+// Animate
+function animate() {
+    requestAnimationFrame(animate)
+    controls.update()
+    renderer.render(scene, camera)
+}
+animate()
+
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth/window.innerHeight
+    camera.updateProjectionMatrix()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+})
+</script>
+
+</body>
+</html>
