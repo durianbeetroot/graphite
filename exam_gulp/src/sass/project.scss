@@ -1,0 +1,10 @@
+@use "./sample";
+
+.feedback {
+  &-valid {
+    @apply text-[#76BC21];
+  }
+  &-invalid {
+    @apply text-[#FE4000];
+  }
+}

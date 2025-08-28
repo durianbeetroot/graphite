@@ -1,0 +1,17 @@
+{
+  "name": "gulp_examinattion",
+  "version": "0.1.0",
+  "devDependencies": {
+  },
+  "engines": {
+    "node": "22",
+    "yarn": "4"
+  },
+  "browserslist": [
+    "last 2 versions"
+  ],
+  "scripts": {
+    "dev": "gulp"
+  },
+  "packageManager": "yarn@4.5.1"
+}
